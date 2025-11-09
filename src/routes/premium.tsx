@@ -7,7 +7,7 @@ export const Route = createFileRoute("/premium")({
   beforeLoad: async ({ location }) => {
     const session = await authClient.getSession();
 
-    if (!session.data) {
+    if (!session.data?.user) {
       throw redirect({
         to: "/login",
         search: {
@@ -40,7 +40,7 @@ function PremiumComponent() {
       }}>
         <Box p="6">
           <Heading size="6" mb="2" style={{ color: "white" }}>
-            Welcome to Premium, {user.name}! 🎉
+            Welcome to Premium, {user?.name || user?.email || 'User'}! 🎉
           </Heading>
           <Text size="4" style={{ color: "white" }}>
             You have access to all premium features.

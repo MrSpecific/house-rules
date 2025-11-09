@@ -7,7 +7,7 @@ export const Route = createFileRoute("/dashboard")({
   beforeLoad: async ({ context, location }) => {
     const session = await authClient.getSession();
 
-    if (!session.data) {
+    if (!session.data?.user) {
       throw redirect({
         to: "/login",
         search: {
@@ -43,10 +43,12 @@ function DashboardComponent() {
 
       <Card mb="6">
         <Box p="4">
-          <Heading size="5" mb="2">Welcome, {user.name}!</Heading>
-          <Text size="3" color="gray">
-            {user.email}
-          </Text>
+          <Heading size="5" mb="2">Welcome, {user?.name || user?.email || 'User'}!</Heading>
+          {user?.email && (
+            <Text size="3" color="gray">
+              {user?.email}
+            </Text>
+          )}
         </Box>
       </Card>
 
