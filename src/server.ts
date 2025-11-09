@@ -40,6 +40,15 @@ export function setupAuthMiddleware(server: ViteDevServer) {
           });
         }
 
+        // Log request details for debugging
+        console.log(`[Better-Auth] Request body:`, body);
+        console.log(`[Better-Auth] Request headers:`, Object.fromEntries(headers.entries()));
+
+        // Ensure Content-Type is set if body exists
+        if (body && !headers.has("Content-Type")) {
+          headers.set("Content-Type", "application/json");
+        }
+
         // Create Web API Request
         const request = new Request(url.toString(), {
           method,
@@ -48,7 +57,29 @@ export function setupAuthMiddleware(server: ViteDevServer) {
         });
 
         // Call Better-Auth handler
-        const response = await auth.handler(request);
+        let response: Response;
+        try {
+          response = await auth.handler(request);
+        } catch (handlerError) {
+          console.error("[Better-Auth] Handler threw an error:", handlerError);
+          throw handlerError;
+        }
+
+        // Log response details for debugging
+        console.log(`[Better-Auth] Response status:`, response.status);
+        const responseBody = await response.text();
+        console.log(`[Better-Auth] Response body:`, responseBody);
+
+        // If it's an error response, log it more prominently
+        if (response.status >= 400) {
+          console.error(`[Better-Auth] Error response (${response.status}):`, responseBody);
+          try {
+            const errorJson = JSON.parse(responseBody);
+            console.error(`[Better-Auth] Parsed error:`, errorJson);
+          } catch (e) {
+            // Not JSON, that's fine
+          }
+        }
 
         // Convert Web API Response back to Node.js response
         res.statusCode = response.status;
@@ -56,7 +87,6 @@ export function setupAuthMiddleware(server: ViteDevServer) {
           res.setHeader(key, value);
         });
 
-        const responseBody = await response.text();
         res.end(responseBody);
         return;
       } catch (error) {

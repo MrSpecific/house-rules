@@ -37,7 +37,19 @@ function LoginComponent() {
       // Redirect to dashboard after successful auth
       navigate({ to: "/dashboard" });
     } catch (err: any) {
-      setError(err.message || "Authentication failed");
+      console.error("Auth error:", err);
+      // Try to extract a more detailed error message
+      let errorMessage = "Authentication failed";
+      if (err?.message) {
+        errorMessage = err.message;
+      } else if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err?.data?.message) {
+        errorMessage = err.data.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

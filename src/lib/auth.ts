@@ -15,23 +15,28 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
-    polar({
-      client: polarClient,
-      createCustomerOnSignUp: true,
-      use: [
-        checkout({
-          products: [
-            {
-              productId: "YOUR_PRODUCT_ID", // ID of Product from Polar Dashboard
-              slug: "pro", // Custom slug for easy reference in Checkout URL, e.g. /checkout/pro
-            },
-          ],
-          successUrl: "/success?checkout_id={CHECKOUT_ID}",
-          authenticatedUsersOnly: true,
-        }),
-        portal(),
-        usage(),
-      ],
-    }),
+    // Temporarily disable Polar plugin if token is not set to avoid sign-up errors
+    ...(import.meta.env?.VITE_POLAR_ACCESS_TOKEN || process.env?.VITE_POLAR_ACCESS_TOKEN
+      ? [
+          polar({
+            client: polarClient,
+            createCustomerOnSignUp: true,
+            use: [
+              checkout({
+                products: [
+                  {
+                    productId: "YOUR_PRODUCT_ID", // ID of Product from Polar Dashboard
+                    slug: "pro", // Custom slug for easy reference in Checkout URL, e.g. /checkout/pro
+                  },
+                ],
+                successUrl: "/success?checkout_id={CHECKOUT_ID}",
+                authenticatedUsersOnly: true,
+              }),
+              portal(),
+              usage(),
+            ],
+          }),
+        ]
+      : []),
   ],
 });
