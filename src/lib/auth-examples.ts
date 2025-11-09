@@ -1,6 +1,6 @@
 // Example usage in your React components
 
-import { authClient } from "@/lib/auth-client";
+import { authClient, polarCheckout, polarPortal } from "@/lib/auth-client";
 
 // Sign up
 await authClient.signUp.email({
@@ -21,13 +21,8 @@ await authClient.signOut();
 // Get session
 const { data: session } = authClient.useSession();
 
-// Check if user has active subscription (from Polar plugin)
-const { data: subscription } = authClient.polar.useSubscription();
+// Redirect to checkout (navigates to /api/auth/polar/checkout/pro)
+polarCheckout("pro");
 
-// Redirect to checkout
-authClient.polar.checkout({
-  slug: "pro", // The slug you defined in auth.ts
-});
-
-// Open customer portal
-authClient.polar.portal();
+// Open customer portal (navigates to /api/auth/polar/portal)
+polarPortal();

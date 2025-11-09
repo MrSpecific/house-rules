@@ -5,6 +5,14 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>house-rules</title>
+    <script>
+      // Polyfill Buffer before any modules load
+      if (typeof window !== 'undefined' && typeof window.Buffer === 'undefined') {
+        // This will be replaced by the actual Buffer polyfill at runtime
+        // The actual polyfill is loaded in polyfills.ts
+        window.Buffer = window.Buffer || {};
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
