@@ -1,10 +1,10 @@
 import { createAuthClient } from "better-auth/react";
-import { organizationClient } from "better-auth/client/plugins";
-import { authUrl } from "./constants/authUrl";
+// import { organizationClient } from "better-auth/client/plugins";
+import { authUrl } from "./env";
 
 export const authClient = createAuthClient({
   baseURL: authUrl,
-  plugins: [organizationClient()],
+  // plugins: [organizationClient()],
 });
 
 // Polar checkout and portal functions

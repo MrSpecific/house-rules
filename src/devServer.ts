@@ -3,15 +3,29 @@ import type { ViteDevServer } from "vite";
 import type { IncomingMessage, ServerResponse } from "http";
 
 export function setupAuthMiddleware(server: ViteDevServer) {
+  // Add a test endpoint to verify middleware is working
+  server.middlewares.use((req, res, next) => {
+    if (req.url === "/api/auth/test") {
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ message: "Better-Auth middleware is working!" }));
+      return;
+    }
+    next();
+  });
+
   server.middlewares.use(async (req: IncomingMessage, res: ServerResponse, next) => {
     // Handle Better-Auth API routes
     if (req.url?.startsWith("/api/auth")) {
       console.log(`[Better-Auth] Handling request: ${req.method} ${req.url}`);
+      console.log(`[Better-Auth] Full URL: ${req.headers.host}${req.url}`);
       try {
         // Convert Node.js req/res to Web API Request/Response
         const protocol = req.headers["x-forwarded-proto"] || "http";
         const host = req.headers.host || "localhost:5173";
-        const url = new URL(req.url || "", `${protocol}://${host}`);
+
+        // Better-Auth expects the full URL including the basePath
+        const fullUrl = `${protocol}://${host}${req.url}`;
+        const url = new URL(fullUrl);
         const method = req.method || "GET";
         const headers = new Headers();
 

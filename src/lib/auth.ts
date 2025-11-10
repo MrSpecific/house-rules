@@ -1,9 +1,10 @@
 import { betterAuth } from "better-auth";
+import { reactStartCookies } from "better-auth/react-start";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { polar, checkout, portal, usage } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
 import { db } from "../db";
-import { authUrl } from "./constants/authUrl";
+import { authUrl } from "./env";
 
 export const auth = betterAuth({
   baseURL: authUrl,
@@ -15,8 +16,10 @@ export const auth = betterAuth({
     enabled: true,
   },
   plugins: [
+    reactStartCookies(),
     // Temporarily disable Polar plugin if token is not set to avoid sign-up errors
-    ...(import.meta.env?.VITE_POLAR_ACCESS_TOKEN || process.env?.VITE_POLAR_ACCESS_TOKEN
+    ...(import.meta.env?.VITE_POLAR_ACCESS_TOKEN ||
+    process.env?.VITE_POLAR_ACCESS_TOKEN
       ? [
           polar({
             client: polarClient,
@@ -25,7 +28,7 @@ export const auth = betterAuth({
               checkout({
                 products: [
                   {
-                    productId: "YOUR_PRODUCT_ID", // ID of Product from Polar Dashboard
+                    productId: "7165dc65-df81-4b68-8e23-dd402320c1d4", // ID of Product from Polar Dashboard
                     slug: "pro", // Custom slug for easy reference in Checkout URL, e.g. /checkout/pro
                   },
                 ],
