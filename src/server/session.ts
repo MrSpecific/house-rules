@@ -1,7 +1,8 @@
 // src/server/session.ts
 import { authUrl } from "@/lib/env";
+import type { UserRole } from "@/lib/permissions";
 
-export type ServerUser = { name?: string | null; email?: string | null };
+export type ServerUser = { name?: string | null; email?: string | null; role?: UserRole | null };
 
 export type ServerSession =
   | { isAuthenticated: false; user: null }
@@ -38,6 +39,7 @@ type BetterAuthResponse = {
   user?: {
     name?: string | null;
     email?: string | null;
+    role?: UserRole | null;
   } | null;
 };
 
@@ -63,6 +65,7 @@ export async function getSessionOnServer(
         ? {
             name: responseData.user.name ?? null,
             email: responseData.user.email ?? null,
+            role: responseData.user.role ?? "user",
           }
         : null;
 

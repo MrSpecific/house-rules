@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Route as RootRoute } from "./__root";
 import { Box, Flex, Text, Heading, Button, Card } from "@radix-ui/themes";
+import { formatRole, hasRequiredRole } from "@/lib/permissions";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -23,10 +24,34 @@ function RouteComponent() {
                 Logged in as:{" "}
                 <Text weight="bold">{auth.user?.name || auth.user?.email}</Text>
               </Text>
+              <Text size="3" color="gray">
+                Role: {formatRole(auth.user.role)}
+              </Text>
               <Flex gap="3">
                 <Link to="/dashboard" style={{ textDecoration: "none" }}>
                   <Button size="3">Go to Dashboard</Button>
                 </Link>
+                {hasRequiredRole("moderator", auth.user.role) && (
+                  <Link to="/moderator" style={{ textDecoration: "none" }}>
+                    <Button size="3" variant="soft">
+                      Moderator Tools
+                    </Button>
+                  </Link>
+                )}
+                {hasRequiredRole("administrator", auth.user.role) && (
+                  <Link to="/admin" style={{ textDecoration: "none" }}>
+                    <Button size="3" variant="soft">
+                      Admin Console
+                    </Button>
+                  </Link>
+                )}
+                {hasRequiredRole("super_administrator", auth.user.role) && (
+                  <Link to="/super-admin" style={{ textDecoration: "none" }}>
+                    <Button size="3" variant="soft">
+                      Super Admin HQ
+                    </Button>
+                  </Link>
+                )}
               </Flex>
             </Flex>
           ) : (

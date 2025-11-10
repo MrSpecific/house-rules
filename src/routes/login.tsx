@@ -7,6 +7,29 @@ export const Route = createFileRoute("/login")({
   component: LoginComponent,
 });
 
+const MIN_PASSWORD_LENGTH = 8;
+
+type AuthErrorShape = {
+  message: string;
+  code?: string | null;
+};
+
+function parseAuthError(error: unknown): AuthErrorShape {
+  const err = error as Record<string, any> | undefined;
+  const data = err?.data ?? err?.response?.data;
+  const code = data?.code ?? err?.code ?? null;
+  let message =
+    data?.message ??
+    err?.message ??
+    (typeof error === "string" ? error : "Authentication failed");
+
+  if (code === "PASSWORD_TOO_SHORT") {
+    message = `Password is too short. Please use at least ${MIN_PASSWORD_LENGTH} characters.`;
+  }
+
+  return { message, code };
+}
+
 function LoginComponent() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -14,11 +37,13 @@ function LoginComponent() {
   const [name, setName] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState("");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setErrorCode(null);
     setLoading(true);
 
     try {
@@ -38,18 +63,9 @@ function LoginComponent() {
       navigate({ to: "/dashboard" });
     } catch (err: any) {
       console.error("Auth error:", err);
-      // Try to extract a more detailed error message
-      let errorMessage = "Authentication failed";
-      if (err?.message) {
-        errorMessage = err.message;
-      } else if (err?.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err?.data?.message) {
-        errorMessage = err.data.message;
-      } else if (typeof err === "string") {
-        errorMessage = err;
-      }
-      setError(errorMessage);
+      const { message, code } = parseAuthError(err);
+      setError(message);
+      setErrorCode(code ?? null);
     } finally {
       setLoading(false);
     }
@@ -110,6 +126,16 @@ function LoginComponent() {
                   required
                   size="3"
                 />
+                {isSignUp && (
+                  <Text
+                    size="1"
+                    mt="1"
+                    as="p"
+                    color={errorCode === "PASSWORD_TOO_SHORT" ? "tomato" : "gray"}
+                  >
+                    Use at least {MIN_PASSWORD_LENGTH} characters to create a strong password.
+                  </Text>
+                )}
               </Box>
 
               {error && (

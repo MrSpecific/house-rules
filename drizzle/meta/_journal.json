@@ -8,6 +8,13 @@
       "when": 1762711526722,
       "tag": "0000_living_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1762755037000,
+      "tag": "0001_add_user_roles",
+      "breakpoints": true
     }
   ]
 }
