@@ -4,11 +4,11 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { polar, checkout, portal, usage } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
 import { db } from "../db";
-import { authUrl } from "./env";
+import { authUrl, authBasePath, authOrigin } from "./env";
 
 export const auth = betterAuth({
   baseURL: authUrl,
-  basePath: "/api/auth",
+  basePath: authBasePath,
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -42,4 +42,5 @@ export const auth = betterAuth({
         ]
       : []),
   ],
+  trustedOrigins: authOrigin ? [authOrigin] : undefined,
 });

@@ -6,7 +6,11 @@ let _db: ReturnType<typeof drizzle> | null = null;
 
 function getDb() {
   if (!_db) {
-    const databaseUrl = import.meta.env?.DATABASE_URL || process.env?.DATABASE_URL;
+    const databaseUrl =
+      import.meta.env?.VITE_DATABASE_URL ||
+      import.meta.env?.DATABASE_URL ||
+      process.env?.DATABASE_URL ||
+      process.env?.VITE_DATABASE_URL;
     if (!databaseUrl) {
       throw new Error("DATABASE_URL is not set");
     }

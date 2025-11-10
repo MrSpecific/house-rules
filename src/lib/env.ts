@@ -26,8 +26,25 @@ function getEnvVar(key: keyof Env, fallback?: string): string {
   throw new Error(`Missing required environment variable: ${key}`);
 }
 
-// Export normalized auth URL
+const DEFAULT_AUTH_URL = "http://localhost:3000/api/auth";
+
+// Export normalized auth URL (includes base path)
 export const authUrl = getEnvVar(
   "VITE_BETTER_AUTH_URL",
-  process.env?.BETTER_AUTH_URL || "http://localhost:5173"
+  process.env?.BETTER_AUTH_URL || DEFAULT_AUTH_URL
 );
+
+function parseAuthUrl(value: string) {
+  try {
+    return new URL(value);
+  } catch (_err) {
+    // Allow relative URLs by resolving against default
+    return new URL(value, DEFAULT_AUTH_URL);
+  }
+}
+
+const parsedAuthUrl = parseAuthUrl(authUrl);
+
+export const authOrigin = parsedAuthUrl.origin;
+export const authBasePath =
+  parsedAuthUrl.pathname === "/" ? "/api/auth" : parsedAuthUrl.pathname.replace(/\/+$/, "");
