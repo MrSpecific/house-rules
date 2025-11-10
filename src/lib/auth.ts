@@ -4,7 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { polar, checkout, portal, usage } from "@polar-sh/better-auth";
 import { polarClient } from "./polar";
 import { db } from "../db";
-import { authUrl, authBasePath, authOrigin } from "./env";
+import { authUrl, authBasePath, authOrigin, polarAccessToken } from "./env";
 
 export const auth = betterAuth({
   baseURL: authUrl,
@@ -18,8 +18,7 @@ export const auth = betterAuth({
   plugins: [
     reactStartCookies(),
     // Temporarily disable Polar plugin if token is not set to avoid sign-up errors
-    ...(import.meta.env?.VITE_POLAR_ACCESS_TOKEN ||
-    process.env?.VITE_POLAR_ACCESS_TOKEN
+    ...(polarAccessToken
       ? [
           polar({
             client: polarClient,
