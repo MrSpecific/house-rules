@@ -1,0 +1,45 @@
+basic user journeys
+
+user: sam - lives with friends, who often host dinner and game nights
+
+context: sam and three other friends decide to play wingspan. given that there are four of them, they want to align on some house rules to keep the game moving, and reduce opportunities for any lopsided play.
+
+story: Sam opens the site and searches for Wingspan
+story: Sam scans existing house rules for modifiers that might benefit game time and imbalance
+story: Sam finds a unique rule that allows players to trade Nectar tokens for extra plays
+story: Sam wants to save this Nectar/Extra Move play as a new house rule for consideration
+story: Sam is surprised to see a common house rule missing from the list, that of removing Ravens from play
+story: Sam wants to add a Banned Birds modifier as both a house rule and to the public list
+story: Sam views all Wingspan modifiers for their house and chooses a subset for the game
+story: Sam shares the selection of Winspan house rules in play
+
+
+// EVERYTHING BELOW WAS COPILOT "TAB" GENERATION
+acceptance criteria:
+- given sam is on the site
+- when sam searches for wingspan
+- then sam sees a list of existing wingspan house rules
+- given sam is viewing wingspan house rules
+- when sam scans existing house rules for modifiers
+- then sam sees a list of modifiers with descriptions and tags
+- given sam is viewing wingspan house rules
+- when sam finds a unique rule that allows players to trade nectar tokens for extra plays
+- then sam can save this nectar/extra move play as a new house rule for consideration
+- given sam is viewing wingspan house rules
+- when sam sees a common house rule missing from the list, that of removing ravens from play
+- then sam can add a banned birds modifier as both a house rule and to the public list
+- given sam is viewing wingspan house rules
+- when sam views all wingspan modifiers for their house
+- then sam can choose a subset for the game
+- given sam is viewing wingspan house rules
+- when sam shares the selection of wingspan house rules in play
+- then sam can share a link or code to the selected house rules
+- given sam is viewing wingspan house rules
+- when sam selects a subset of house rules for the game
+- then sam sees a summary of the selected house rules with descriptions and tags
+- given sam is viewing wingspan house rules
+- when sam selects a subset of house rules for the game
+- then sam can easily toggle rules on or off for the game session
+- given sam is viewing wingspan house rules
+- when sam selects a subset of house rules for the game
+- then sam can see the impact of selected house rules on game duration and complexity
