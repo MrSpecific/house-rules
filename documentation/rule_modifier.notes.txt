@@ -1,0 +1,39 @@
+🛠️ Concept: Game Rule Modifier (House Rule / Patch)
+
+A Game Rule Modifier doesn’t define a complete rule — it modifies an existing one by:
+	1.	Referencing the base rule (by ID, name, or tag).
+	2.	Describing the change — override, extension, removal, or conditional.
+	3.	Optionally injecting new effects, conditions, or exceptions.
+
+⸻
+
+✅ Key Modifier Actions
+You might think of modifiers in terms of intent/actions:
+
+Modifier Type || Description
+override || Replaces part or all of a rule (e.g. effect, trigger, priority).
+extend || Adds new behavior alongside existing logic.
+disable || Prevents a rule from activating.
+patch || Alters part of a rule without fully overriding (e.g., just adds an exception).
+conditionalize || Makes a rule only apply under a new condition.
+
+
+📌 Monopoly Example Modifier: Free Parking Jackpot
+const freeParkingModifier: RuleModifier = {
+  id: "modifier_free_parking_jackpot",
+  name: "Enable Free Parking Jackpot",
+  targetRuleId: "official_free_parking_rule",
+  modifierType: RuleModifierType.Override,
+  effectOverride: {
+    description: "When a player lands on Free Parking, they collect all accumulated fines.",
+    actions: [
+      { type: "transfer", from: "center_pot", to: "currentPlayer" },
+      { type: "reset", target: "center_pot" }
+    ]
+  },
+  conditionalFlag: "house_rules_enabled.free_parking_jackpot",
+  source: "House Rule",
+  version: {
+    introducedIn: "1.0"
+  }
+};
