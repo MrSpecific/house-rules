@@ -1,0 +1,213 @@
+full context here: https://chatgpt.com/share/69180087-434c-8005-acbd-3774833795a4
+
+🎲 Game Rule Object — Property Definitions (Human-Readable)
+
+🧱 Core / Required Properties (Most Common)
+	1.	id
+A unique identifier for the rule (e.g., "rule_001").
+	2.	name
+A short, descriptive title of the rule (e.g., "Combat Resolution").
+	3.	trigger
+Describes the event or condition that activates the rule (e.g., "When a player draws a card").
+	4.	context
+Specifies the scope in which the rule applies, such as phase of the game, board area, or which players are involved.
+	5.	effect
+The outcome or action the rule performs. May include both plain language and structured actions.
+	6.	componentsAffected
+Lists the game elements influenced by the rule (e.g., "player_hand", "deck", "tokens").
+	7.	source
+The origin of the rule — e.g., "Core Rulebook", "House Rule", or "Expansion Set X".
+
+⸻
+
+🧩 Optional / Extended Properties
+	8.	priority
+Indicates the order of execution when multiple rules apply at the same time.
+	9.	duration
+Defines whether the rule is instant, temporary, or persistent (e.g., "instant", "until end of turn").
+	10.	exceptions
+Lists any special conditions where the rule does not apply.
+	11.	dependencies
+Specifies prerequisites or other rules that must be valid or active for this rule to work.
+	12.	playerAgency
+Describes whether players can make choices in response to the rule, and what options they have.
+	13.	reversibility
+States whether the effect of the rule can be undone or is final once executed.
+	14.	version
+Contains versioning info for rule tracking (e.g., introduced version, patch notes, errata).
+	15.	meta
+A collection of metadata, including:
+	•	tags: Keywords to classify the rule.
+	•	localization: Multilingual labels or translations.
+	•	complexity: Relative difficulty (e.g., "simple", "medium", "complex").
+	•	ruleType: Type of rule (e.g., "static", "procedural", "override").
+	•	conflictResolution: Notes on what to do if this rule conflicts with others.
+	16.	examples
+A list of practical examples showing how the rule works in specific game situations.
+
+
+
+// example
+{
+  "id": "rule_001",
+  "name": "Combat Resolution",
+  "trigger": "When two units occupy the same space",
+  "context": {
+    "phase": "Combat Phase",
+    "location": "Board",
+    "playersInvolved": ["attacker", "defender"]
+  },
+  "effect": {
+    "description": "Compare combat strength; loser removes unit from board",
+    "actions": [
+      { "type": "compare", "attributes": ["combat_strength"] },
+      { "type": "remove", "target": "losing_unit" }
+    ]
+  },
+  "priority": 1,
+  "duration": "instant",
+  "exceptions": [
+    "If attacker has 'Stealth' ability, skip combat"
+  ],
+  "dependencies": [
+    "unit_stats_initialized",
+    "board_state_valid"
+  ],
+  "source": "Core Rulebook, Page 15",
+  "playerAgency": {
+    "choicesAvailable": false,
+    "responseOptions": []
+  },
+  "componentsAffected": ["unit", "board_tile"],
+  "reversibility": false,
+  "version": {
+    "introducedIn": "1.0",
+    "lastUpdated": "1.2",
+    "notes": "Clarified tie-breaker handling"
+  },
+  "meta": {
+    "tags": ["combat", "conflict", "resolution"],
+    "localization": {
+      "es": "Resolución de Combate",
+      "de": "Kampfauflösung"
+    },
+    "complexity": "medium",
+    "ruleType": "procedural",
+    "conflictResolution": "This rule overrides any movement rule during conflict"
+  },
+  "examples": [
+    {
+      "situation": "Red unit moves into a tile with a Blue unit",
+      "expectedOutcome": "Combat is resolved; Blue unit is removed if Red has higher strength"
+    }
+  ]
+}
+
+// Summary: A Minimal Rule Object Might Look Like
+{
+  "id": "rule_017",
+  "name": "Draw Replacement",
+  "trigger": "When a player draws a card",
+  "context": { "phase": "Draw Phase" },
+  "effect": {
+    "description": "That player may draw two and choose one to keep"
+  },
+  "componentsAffected": ["player_hand", "deck"],
+  "source": "Expansion Pack: Tactics"
+}
+
+// 🏠 Monopoly “Free Parking Jackpot” – House Rule in JSON
+{
+  "id": "house_rule_free_parking_jackpot",
+  "name": "Free Parking Jackpot",
+  "trigger": "When a player lands on the Free Parking space",
+  "context": {
+    "phase": "Movement",
+    "location": "Free Parking",
+    "playersInvolved": ["currentPlayer"]
+  },
+  "effect": {
+    "description": "That player collects all money from fines, taxes, and fees placed in the center pot",
+    "actions": [
+      { "type": "transfer", "from": "center_pot", "to": "currentPlayer" },
+      { "type": "reset", "target": "center_pot" }
+    ]
+  },
+  "priority": 10,
+  "duration": "instant",
+  "exceptions": [],
+  "dependencies": [
+    "money_tracking_enabled",
+    "center_pot_initialized"
+  ],
+  "source": "House Rule",
+  "playerAgency": {
+    "choicesAvailable": false
+  },
+  "componentsAffected": ["center_pot", "player_cash"],
+  "reversibility": false,
+  "version": {
+    "introducedIn": "House Variant v1.0"
+  },
+  "meta": {
+    "tags": ["house rule", "monopoly", "free parking", "money"],
+    "ruleType": "override",
+    "conflictResolution": "Overrides official rulebook, which states Free Parking has no effect"
+  },
+  "examples": [
+    {
+      "situation": "Player lands on Free Parking with $350 in center pot",
+      "expectedOutcome": "Player receives $350, center pot resets to $0"
+    }
+  ]
+}
+
+// 🏠 Conditional House Rule Example: Free Parking Jackpot (Optional Variant)
+{
+  "id": "house_rule_conditional_free_parking",
+  "name": "Optional Free Parking Jackpot",
+  "trigger": "When a player lands on the Free Parking space",
+  "context": {
+    "phase": "Movement",
+    "location": "Free Parking",
+    "playersInvolved": ["currentPlayer"]
+  },
+  "effect": {
+    "description": "That player collects all money in the center pot, but only if the house rule is enabled",
+    "actions": [
+      { "type": "transfer", "from": "center_pot", "to": "currentPlayer" },
+      { "type": "reset", "target": "center_pot" }
+    ]
+  },
+  "priority": 10,
+  "duration": "instant",
+  "exceptions": [],
+  "dependencies": [
+    "house_rules_enabled.free_parking_jackpot == true",
+    "center_pot_initialized"
+  ],
+  "source": "House Rule (Player Agreement Required)",
+  "playerAgency": {
+    "choicesAvailable": false
+  },
+  "componentsAffected": ["center_pot", "player_cash"],
+  "reversibility": false,
+  "version": {
+    "introducedIn": "House Variant v1.1"
+  },
+  "meta": {
+    "tags": ["house rule", "optional", "monopoly", "free parking", "money"],
+    "ruleType": "conditional_override",
+    "conflictResolution": "Supersedes official rulebook if enabled by group consensus"
+  },
+  "examples": [
+    {
+      "situation": "Game start: players agree to enable Free Parking Jackpot",
+      "expectedOutcome": "Rule is active during gameplay; money is collected from the pot"
+    },
+    {
+      "situation": "Game start: players do not enable house rule",
+      "expectedOutcome": "Free Parking has no effect, following the official rulebook"
+    }
+  ]
+}
